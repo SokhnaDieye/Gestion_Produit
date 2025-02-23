@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalogue de Produits</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .produit-table {
+            margin-top: 20px;
+        }
+        .produit-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .produit-table td, .produit-table th {
+            text-align: center;
+        }
+        .produit-card {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="card produit-card">
+        <div class="card-body">
+            <h5 class="card-title text-center" th:text="${produit.id != null} ? 'Modifier un produit' : 'Ajouter un produit'"></h5>
+
+            <form th:action="${produit.id != null} ? @{/produits/update/{id}(id=${produit.id})} : @{/produits}"
+                  th:object="${produit}" method="post">
+
+                <div class="form-group">
+                    <label for="reference">Référence</label>
+                    <input type="text" class="form-control" id="reference" name="reference" th:field="*{reference}" >
+                    <div th:if="${#fields.hasErrors('reference')}" class="error-message text-danger" th:errors="*{reference}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="designation">Désignation</label>
+                    <input type="text" class="form-control" id="designation" name="designation" th:field="*{designation}" >
+                    <div th:if="${#fields.hasErrors('designation')}" class="error-message text-danger" th:errors="*{designation}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="prix">Prix</label>
+                    <input type="number" class="form-control" id="prix" name="prix" th:field="*{prix}" >
+                    <div th:if="${#fields.hasErrors('prix')}" class="error-message text-danger" th:errors="*{prix}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantite">Quantité</label>
+                    <input type="number" class="form-control" id="quantite" name="quantite" th:field="*{quantite}" >
+                    <div th:if="${#fields.hasErrors('quantite')}" class="error-message text-danger" th:errors="*{quantite}"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary d-block mx-auto" th:text="${produit.id != null} ? 'Modifier' : 'Ajouter'"></button>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="text-center my-4">Liste Produit</h2>
+
+    <form th:action="@{/produits/search}" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" name="keyword" placeholder="Rechercher par désignation">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </div>
+    </form>
+    <table class="table table-bordered produit-table">
+        <thead>
+        <tr>
+            <th>REF</th>
+            <th>DESIGNATION</th>
+            <th>PRIX</th>
+            <th>QUANTITE</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="produit : ${produits}">
+            <td th:text="${produit.reference}"></td>
+            <td th:text="${produit.designation}"></td>
+            <td th:text="${produit.prix}"></td>
+            <td th:text="${produit.quantite}"></td>
+            <td>
+                <a th:href="@{/produits/edit/{id}(id=${produit.id})}" class="btn btn-warning btn-sm">Modifier</a>
+                <a th:href="@{/produits/delete/{id}(id=${produit.id})}" class="btn btn-danger btn-sm">Supprimer</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
